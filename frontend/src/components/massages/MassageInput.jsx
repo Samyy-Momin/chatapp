@@ -1,0 +1,36 @@
+import React, { useState } from 'react'
+import { IoMdSend } from "react-icons/io";
+import useSendMassage from '../../hooks/useSendMassage';
+
+const MassageInput = () => {
+
+  const [massage, setMassage] = useState("");
+  const { loading, sendMassage } = useSendMassage();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!massage) return;
+    await sendMassage(massage);
+    setMassage("");
+  }
+  return (
+    <form className='px-4 my-3' onSubmit={handleSubmit}>
+      <div className="w-full relative">
+        <input
+          type="text"
+          className='border text-sm rounded-lg block w-full p-2.5 bg-gray-600 text-white'
+          placeholder='Type Your Massage'
+          value={massage}
+          onChange={(e) => setMassage(e.target.value)}
+        />
+        <button type='submit' className='absolute inset-y-0 end-0 flex items-center pe-3 '>
+          {loading ? <div className='loading loading-spinner'></div> : <IoMdSend />}
+        </button>
+
+      </div>
+
+    </form>
+  )
+}
+
+export default MassageInput

@@ -1,0 +1,4 @@
+username : samimomin40_db_user
+password : dBxCD3eTpUHxO4CH
+ip addres : 103.42.167.135
+connection string : mongodb+srv://samimomin40_db_user:dBxCD3eTpUHxO4CH@cluster0.a9tfmln.mongodb.net/?appName=Cluster0
