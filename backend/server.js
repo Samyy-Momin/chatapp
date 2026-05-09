@@ -6,8 +6,8 @@ import massageRoutes from './routes/massage.routes.js';
 import userRoutes from './routes/user.routes.js';
 import { connect } from 'mongoose';
 import connectToMongoDB from './db/connectToMongoDB.js';
+import { app, server } from './socket/socket.js'
 
-const app = express();
 const PORT = process.env.PORT || 5000;
 
 dotenv.config();
@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/massage', massageRoutes);
 app.use('/api/users', userRoutes);
-app.listen(PORT,()=>{
+server.listen(PORT,()=>{
     connectToMongoDB();
     console.log(`Server is running on port ${PORT}`);
 });
