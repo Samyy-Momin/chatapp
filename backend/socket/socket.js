@@ -19,21 +19,27 @@ export const getReceiverSocketId = (receiverId) => {
 const userSocketMap = {}; // {userId: socketId}
 
 io.on("connection", (socket) => {
-    console.log("a user connected", socket.id);
+	const userId = socket.handshake.query.userId;
+	console.log(`User connected: ${userId} (socketId: ${socket.id})`);
 
-    const userId = socket.handshake.query.userId;
-    if (userId !== "undefined") {
-        userSocketMap[userId] = socket.id;
-    }
+	if (userId && userId !== "undefined") {
+		userSocketMap[userId] = socket.id;
+	}
 
-    // Send the list of online users to all connected clients
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+	// Broadcast the online users to everyone
+	const onlineUsers = Object.keys(userSocketMap);
+	console.log("Current Online Users:", onlineUsers);
+	io.emit("getOnlineUsers", onlineUsers);
 
-    socket.on("disconnect", () => {
-        console.log("user disconnected", socket.id);
-        delete userSocketMap[userId];
-        io.emit("getOnlineUsers", Object.keys(userSocketMap));
-    });
+	socket.on("disconnect", () => {
+		console.log(`User disconnected: ${userId} (socketId: ${socket.id})`);
+		if (userId && userId !== "undefined" && userSocketMap[userId] === socket.id) {
+			delete userSocketMap[userId];
+		}
+		const updatedOnlineUsers = Object.keys(userSocketMap);
+		console.log("Updated Online Users:", updatedOnlineUsers);
+		io.emit("getOnlineUsers", updatedOnlineUsers);
+	});
 });
 
 export { app, io, server };
